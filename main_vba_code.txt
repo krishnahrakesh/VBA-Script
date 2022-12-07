@@ -1,0 +1,1096 @@
+Sub Bank_Reconcillation()
+ws2.Range("A5:H" & lstr2).Copy ws1.Range("A" & lstr1 + 1)
+
+'Declare Variables
+
+Dim wb1, wb2, wb3, wb4 As Workbook
+Dim ws1, ws2, ws3, ws4, ws5, ws6, ws7, ws8, ws9, ws10 As Worksheet
+Dim lstr1, lstr2, lstr3, lstr4, lstr5, lstr6, lstr7, lstr8, lstr9, lstr As Long
+Dim fValue, v, k, i As Variant
+Dim pTbl As PivotTable
+
+
+'Set the variables
+Set wb1 = Workbooks.Open("E:\nilesh_Bot\Bank_Reconsillation\POC\Output\Template.xlsx")
+Set wb2 = Workbooks.Open("E:\nilesh_Bot\Bank_Reconsillation\POC\Input\Indus File.xlsx")
+Set wb3 = Workbooks.Open("E:\nilesh_Bot\Bank_Reconsillation\POC\Input\Yes Bank Collection 10585700000160 12120018.xlsx")
+Set ws1 = wb1.Sheets("Recon_Data")
+Set ws10 = wb1.Sheets("Matching data")
+Set ws2 = wb2.Sheets("Sheet1")
+Set ws3 = wb3.Sheets("CMS")
+Set ws4 = wb3.Sheets("ECS")
+Set ws5 = wb3.Sheets("ACHDROW")
+Set ws6 = wb3.Sheets("Bank Statement")
+
+
+'Filter the data for Debit Amount
+lstr1 = ws1.Cells(Rows.Count, 1).End(xlUp).Row
+lstr2 = ws2.Cells(Rows.Count, 1).End(xlUp).Row
+ws2.AutoFilterMode = False
+ws2.Range("A4:N4").AutoFilter field:=9, Criteria1:=">0"
+
+ws2.Range("A5:H" & lstr2).Copy ws1.Range("A" & lstr1 + 1)
+ws2.Range("I5:I" & lstr2).Copy ws1.Range("J" & lstr1 + 1)
+ws2.Range("K5:K" & lstr2).Copy ws1.Range("I" & lstr1 + 1)
+lstr = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+ws1.Range("K" & lstr1 + 1 & ":K" & lstr).Value = "GL DR"
+
+'Filter the data for Credit Amount
+ws2.AutoFilterMode = False
+lstr1 = ws1.Cells(Rows.Count, 1).End(xlUp).Row
+lstr2 = ws2.Cells(Rows.Count, 1).End(xlUp).Row
+ws2.Range("A4:K4").AutoFilter field:=10, Criteria1:=">0"
+
+ws2.Range("A5:H" & lstr2).Copy ws1.Range("A" & lstr1 + 1)
+ws2.Range("J5:J" & lstr2).Copy ws1.Range("J" & lstr1 + 1)
+ws2.Range("K5:K" & lstr2).Copy ws1.Range("I" & lstr1 + 1)
+lstr = ws1.Cells(Rows.Count, 1).End(xlUp).Row
+ws1.Range("K" & lstr1 + 1 & ":K" & lstr).Value = "GL CR"
+
+wb2.Close SaveChanges:=False
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+https://www.nseindia.com/api/quote-derivative?symbol=BANKNIFTY&identifier=OPTIDXBANKNIFTY29-09-2022CE38000.00
+
+'Filter the data for TYPE_OF_LIQ "Bank_CR_Return"
+ws3.AutoFilterMode = False
+lstr1 = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+lstr3 = ws3.Cells(Rows.Count, 2).End(xlUp).Row
+ws3.Range("A1:Z1").AutoFilter field:=16, Criteria1:="Return"
+
+ws3.Range("J2:J" & lstr3).Copy ws1.Range("H" & lstr1 + 1)
+ws3.Range("L2:L" & lstr3).Copy ws1.Range("J" & lstr1 + 1)
+ws3.Range("Q2:Q" & lstr3).Copy ws1.Range("B" & lstr1 + 1)
+ws3.Range("Q2:Q" & lstr3).Copy ws1.Range("C" & lstr1 + 1)
+ws3.Range("S2:S" & lstr3).Copy ws1.Range("D" & lstr1 + 1)
+ws3.Range("T2:T" & lstr3).Copy ws1.Range("E" & lstr1 + 1)
+ws3.Range("I2:I" & lstr3).Copy ws1.Range("I" & lstr1 + 1)
+
+lstr = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+ws1.Range("F" & lstr1 & ":F" & lstr) = ws1.Range("F" & lstr1).Value
+ws1.Range("G" & lstr1 & ":G" & lstr) = ws1.Range("G" & lstr1).Value
+ws1.Range("K" & lstr1 + 1 & ":K" & lstr).Value = "Bank CR"
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+'Filter the data for TYPE_OF_LIQ "Bank_DR_Return"
+ws3.AutoFilterMode = False
+lstr1 = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+lstr3 = ws3.Cells(Rows.Count, 2).End(xlUp).Row
+ws3.Range("A1:Z1").AutoFilter field:=16, Criteria1:="Return"
+
+ws3.Range("J2:J" & lstr3).Copy ws1.Range("H" & lstr1 + 1)
+ws3.Range("L2:L" & lstr3).Copy ws1.Range("J" & lstr1 + 1)
+ws3.Range("Q2:Q" & lstr3).Copy ws1.Range("B" & lstr1 + 1)
+ws3.Range("Q2:Q" & lstr3).Copy ws1.Range("C" & lstr1 + 1)
+ws3.Range("S2:S" & lstr3).Copy ws1.Range("D" & lstr1 + 1)
+ws3.Range("T2:T" & lstr3).Copy ws1.Range("E" & lstr1 + 1)
+ws3.Range("I2:I" & lstr3).Copy ws1.Range("I" & lstr1 + 1)
+
+lstr = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+ws1.Range("F" & lstr1 & ":F" & lstr) = ws1.Range("F" & lstr1).Value
+ws1.Range("G" & lstr1 & ":G" & lstr) = ws1.Range("G" & lstr1).Value
+ws1.Range("K" & lstr1 + 1 & ":K" & lstr).Value = "Bank DR"
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+'Filter the data for TYPE_OF_LIQ "Bank_CR_Paid"
+ws3.AutoFilterMode = False
+lstr1 = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+lstr3 = ws3.Cells(Rows.Count, 2).End(xlUp).Row
+ws3.Range("A1:Z1").AutoFilter field:=16, Criteria1:="Paid"
+
+ws3.Range("J2:J" & lstr3).Copy ws1.Range("H" & lstr1 + 1)
+ws3.Range("L2:L" & lstr3).Copy ws1.Range("J" & lstr1 + 1)
+ws3.Range("Q2:Q" & lstr3).Copy ws1.Range("B" & lstr1 + 1)
+ws3.Range("Q2:Q" & lstr3).Copy ws1.Range("C" & lstr1 + 1)
+ws3.Range("S2:S" & lstr3).Copy ws1.Range("D" & lstr1 + 1)
+ws3.Range("T2:T" & lstr3).Copy ws1.Range("E" & lstr1 + 1)
+ws3.Range("I2:I" & lstr3).Copy ws1.Range("I" & lstr1 + 1)
+lstr = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+ws1.Range("F" & lstr1 & ":F" & lstr) = ws1.Range("F" & lstr1).Value
+ws1.Range("G" & lstr1 & ":G" & lstr) = ws1.Range("G" & lstr1).Value
+ws1.Range("K" & lstr1 + 1 & ":K" & lstr).Value = "Bank CR"
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+'Filter the data for ECS "Bank_CR"
+ws4.AutoFilterMode = False
+lstr1 = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+lstr4 = ws4.Cells(Rows.Count, 2).End(xlUp).Row
+ws4.Range("A1:F1").AutoFilter field:=6, Criteria1:="00"
+
+ws4.Range("A2:A" & lstr4).Copy ws1.Range("D" & lstr1 + 1)
+ws4.Range("B2:B" & lstr4).Copy ws1.Range("H" & lstr1 + 1)
+ws4.Range("E2:E" & lstr4).Copy ws1.Range("C" & lstr1 + 1)
+ws4.Range("E2:E" & lstr4).Copy ws1.Range("B" & lstr1 + 1)
+ws4.Range("C2:C" & lstr4).Copy ws1.Range("E" & lstr1 + 1)
+ws4.Range("D2:D" & lstr4).Copy ws1.Range("J" & lstr1 + 1)
+
+lstr = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+ws1.Range("F" & lstr1 & ":F" & lstr) = ws1.Range("F" & lstr1).Value
+ws1.Range("G" & lstr1 & ":G" & lstr) = ws1.Range("G" & lstr1).Value
+ws1.Range("K" & lstr1 + 1 & ":K" & lstr).Value = "Bank CR"
+ws1.Range("I" & lstr1 + 1 & ":I" & lstr).Value = "ECS"
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'Filter the data for ACHDROW "Bank_CR"
+ws5.AutoFilterMode = False
+lstr1 = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+lstr5 = ws5.Cells(Rows.Count, 2).End(xlUp).Row
+ws5.Range("A1:O1").AutoFilter field:=10, Criteria1:="ACCEPTED(1)/0"
+
+ws5.Range("C2:C" & lstr5).Copy ws1.Range("D" & lstr1 + 1)
+ws5.Range("L2:L" & lstr5).Copy ws1.Range("J" & lstr1 + 1)
+ws5.Range("G2:G" & lstr5).Copy ws1.Range("C" & lstr1 + 1)
+ws5.Range("G2:G" & lstr5).Copy ws1.Range("B" & lstr1 + 1)
+ws5.Range("N2:N" & lstr5).Copy ws1.Range("E" & lstr1 + 1)
+ws5.Range("H2:H" & lstr5).Copy ws1.Range("D" & lstr1 + 1)
+
+lstr = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+ws1.Range("F" & lstr1 & ":F" & lstr) = ws1.Range("F" & lstr1).Value
+ws1.Range("G" & lstr1 & ":G" & lstr) = ws1.Range("G" & lstr1).Value
+ws1.Range("K" & lstr1 + 1 & ":K" & lstr).Value = "Bank CR"
+ws1.Range("I" & lstr1 + 1 & ":I" & lstr).Value = "ECS"
+
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'Filter the data for Bank Statement_D "Bank_CR"
+ws6.AutoFilterMode = False
+lstr1 = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+lstr6 = ws6.Cells(Rows.Count, 2).End(xlUp).Row
+ws6.Range("A4:K4" & lstr).AutoFilter field:=11, Criteria1:="Sweep"
+ws6.Range("A4:K4" & lstr).AutoFilter field:=4, Criteria1:="D"
+ws6.Range("A5:A" & lstr6).Copy ws1.Range("B" & lstr1 + 1)
+ws6.Range("B5:B" & lstr6).Copy ws1.Range("C" & lstr1 + 1)
+ws6.Range("E5:E" & lstr6).Copy ws1.Range("E" & lstr1 + 1)
+ws6.Range("K5:K" & lstr6).Copy ws1.Range("H" & lstr1 + 1)
+ws6.Range("C5:C" & lstr6).Copy ws1.Range("J" & lstr1 + 1)
+
+lstr = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+ws1.Range("F" & lstr1 & ":F" & lstr) = ws1.Range("F" & lstr1).Value
+ws1.Range("G" & lstr1 & ":G" & lstr) = ws1.Range("G" & lstr1).Value
+ws1.Range("K" & lstr1 + 1 & ":K" & lstr).Value = "Bank DR"
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'Filter the data for Bank Statement_D "Bank_DR"
+ws6.AutoFilterMode = False
+lstr1 = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+lstr6 = ws6.Cells(Rows.Count, 2).End(xlUp).Row
+ws6.Range("A4:K4" & lstr).AutoFilter field:=11, Criteria1:="Insurance"
+ws6.Range("A4:K4" & lstr).AutoFilter field:=4, Criteria1:="C"
+ws6.Range("A5:A" & lstr6).Copy ws1.Range("B" & lstr1 + 1)
+ws6.Range("B5:B" & lstr6).Copy ws1.Range("C" & lstr1 + 1)
+ws6.Range("E5:E" & lstr6).Copy ws1.Range("E" & lstr1 + 1)
+ws6.Range("K5:K" & lstr6).Copy ws1.Range("H" & lstr1 + 1)
+ws6.Range("C5:C" & lstr6).Copy ws1.Range("J" & lstr1 + 1)
+
+lstr = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+ws1.Range("F" & lstr1 & ":F" & lstr) = ws1.Range("F" & lstr1).Value
+ws1.Range("G" & lstr1 & ":G" & lstr) = ws1.Range("G" & lstr1).Value
+ws1.Range("K" & lstr1 + 1 & ":K" & lstr).Value = "Bank CR"
+
+wb3.Close SaveChanges:=False
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'B1 - GL CR & GL DR
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Set wb4 = Workbooks.Add
+Set ws7 = wb4.Sheets("Sheet1")
+lstr1 = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+ws1.Range("A7:T7").AutoFilter field:=9, Criteria1:="ECS"
+ws1.Range("A7:T7").AutoFilter field:=11, Criteria1:=Array("GL DR", "GL CR"), Operator:=xlFilterValues
+ws1.Range("D7:D" & lstr1).Copy ws7.Range("A1")
+ws1.Range("J7:J" & lstr1).Copy ws7.Range("B1")
+ws1.Range("K7:K" & lstr1).Copy ws7.Range("C1")
+wb4.Sheets.Add after:=wb4.Sheets("Sheet1")
+Set ws8 = wb4.Sheets("Sheet2")
+lstr7 = ws7.Cells(Rows.Count, 2).End(xlUp).Row
+Set pTbl = wb4.PivotCaches.Create(SourceType:=xlDatabase, SourceData:=ws7.Range("A1:C" & lstr7)). _
+CreatePivotTable(TableDestination:=ws8.Range("A1"), TableName:="GL CR/DR PivotTable")
+
+    With ws8.PivotTables("GL CR/DR PivotTable").PivotFields("Loan Account No")
+        .Orientation = xlRowField
+        .Position = 1
+    End With
+    With ws8.PivotTables("GL CR/DR PivotTable").PivotFields("DR / CR")
+        .Orientation = xlColumnField
+        .Position = 1
+    End With
+    With ws8.PivotTables("GL CR/DR PivotTable").PivotFields("AMOUNT")
+        .Orientation = xlDataField
+        .Position = 1
+        .Function = xlSum
+        .NumberFormat = "General"
+        .Value = .Value
+    End With
+wb4.Sheets.Add after:=wb4.Sheets("Sheet2")
+Set ws9 = wb4.Sheets("Sheet3")
+lstr8 = ws8.Cells(Rows.Count, 1).End(xlUp).Row
+ws8.Range("A2:D" & lstr8 - 1).Copy ws9.Range("A1")
+lstr9 = ws9.Cells(Rows.Count, 1).End(xlUp).Row
+ws9.Cells(1, 5).Value = "Difference"
+    For i = 2 To lstr9
+        ws9.Cells(i, 5).Value = ws9.Cells(i, 3).Value - ws9.Cells(i, 2).Value
+    Next i
+    
+ws9.Range("A1:E1").AutoFilter field:=5, Criteria1:="<>0"
+ws9.Range("A2:E" & lstr9).SpecialCells(xlCellTypeVisible).EntireRow.Delete
+ws9.AutoFilterMode = False
+    
+k = 8
+ws1.Range("T" & k - 1).Value = "VLOOKUP Values"
+lstr = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+lstr9 = ws9.Cells(Rows.Count, 1).End(xlUp).Row
+ws1.AutoFilterMode = False
+ws1.Range("T" & k & ":T" & lstr).Value = Application.VLookup _
+(ws1.Range("D" & k & ":D" & lstr).Value, ws9.Range("A2:A" & lstr9), 1, False)
+ws1.Range("A7:T7").AutoFilter field:=9, Criteria1:="ECS"
+ws1.Range("A7:T7").AutoFilter field:=11, Criteria1:=Array("GL DR", "GL CR"), Operator:=xlFilterValues
+ws1.Range("A7:T7").AutoFilter field:=20, Criteria1:="<>#N/A"
+ws1.Range("A8:T" & lstr).Copy ws10.Range("A2")
+ws1.Range("A8:T" & lstr).SpecialCells(xlCellTypeVisible).EntireRow.Delete
+ws1.AutoFilterMode = False
+ws1.Range("T" & k & ":T" & lstr).EntireColumn.Delete
+wb4.Close False
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'B2 - Bank CR & GL DR Exclude Loan Amount
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Set wb4 = Workbooks.Add
+Set ws7 = wb4.Sheets("Sheet1")
+lstr1 = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+ws1.Range("A7:T7").AutoFilter field:=9, Criteria1:="ECS"
+ws1.Range("A7:T7").AutoFilter field:=11, Criteria1:=Array("GL DR", "Bank CR"), Operator:=xlFilterValues
+ws1.Range("D7:D" & lstr1).Copy ws7.Range("A1")
+ws1.Range("J7:J" & lstr1).Copy ws7.Range("B1")
+ws1.Range("K7:K" & lstr1).Copy ws7.Range("C1")
+wb4.Sheets.Add after:=wb4.Sheets("Sheet1")
+Set ws8 = wb4.Sheets("Sheet2")
+lstr7 = ws7.Cells(Rows.Count, 2).End(xlUp).Row
+Set pTbl = wb4.PivotCaches.Create(SourceType:=xlDatabase, SourceData:=ws7.Range("A1:C" & lstr7)). _
+CreatePivotTable(TableDestination:=ws8.Range("A1"), TableName:="GL DR and Bank CR PivotTable")
+
+    With ws8.PivotTables("GL DR and Bank CR PivotTable").PivotFields("Loan Account No")
+        .Orientation = xlRowField
+        .Position = 1
+    End With
+    With ws8.PivotTables("GL DR and Bank CR PivotTable").PivotFields("DR / CR")
+        .Orientation = xlColumnField
+        .Position = 1
+    End With
+    With ws8.PivotTables("GL DR and Bank CR PivotTable").PivotFields("AMOUNT")
+        .Orientation = xlDataField
+        .Position = 1
+        .Function = xlSum
+        .NumberFormat = "General"
+        .Value = .Value
+    End With
+wb4.Sheets.Add after:=wb4.Sheets("Sheet2")
+Set ws9 = wb4.Sheets("Sheet3")
+lstr8 = ws8.Cells(Rows.Count, 1).End(xlUp).Row
+ws8.Range("A2:D" & lstr8 - 1).Copy ws9.Range("A1")
+lstr9 = ws9.Cells(Rows.Count, 1).End(xlUp).Row
+ws9.Cells(1, 5).Value = "Difference"
+    For i = 2 To lstr9
+        ws9.Cells(i, 5).Value = ws9.Cells(i, 3).Value - ws9.Cells(i, 2).Value
+    Next i
+    
+ws9.Range("A1:E1").AutoFilter field:=5, Criteria1:="<>0"
+ws9.Range("A2:E" & lstr9).SpecialCells(xlCellTypeVisible).EntireRow.Delete
+ws9.AutoFilterMode = False
+    
+k = 8
+ws1.Range("T" & k - 1).Value = "VLOOKUP Values"
+lstr = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+'lstr9 = ws9.Cells(Rows.Count, 1).End(xlUp).Row
+ws1.AutoFilterMode = False
+ws1.Range("T" & k & ":T" & lstr).Value = Application.VLookup _
+(ws1.Range("D" & k & ":D" & lstr).Value, ws9.Range("A2:A" & lstr9), 1, False)
+ws1.Range("A7:T7").AutoFilter field:=9, Criteria1:="ECS"
+ws1.Range("A7:T7").AutoFilter field:=11, Criteria1:=Array("GL DR", "Bank CR"), Operator:=xlFilterValues
+ws1.Range("A7:T7").AutoFilter field:=20, Criteria1:="<>#N/A"
+lstr10 = ws10.Cells(Rows.Count, 2).End(xlUp).Row
+ws1.Range("A8:T" & lstr).Copy ws10.Range("A" & lstr10 + 1)
+ws1.Range("A8:T" & lstr).SpecialCells(xlCellTypeVisible).EntireRow.Delete
+ws1.AutoFilterMode = False
+ws1.Range("T" & k & ":T" & lstr).EntireColumn.Delete
+wb4.Close False
+
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'C1 - Bank DR & GL CR
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Set wb4 = Workbooks.Add
+Set ws7 = wb4.Sheets("Sheet1")
+lstr1 = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+ws1.Cells(7, 19).Value = "Concant Value"
+    For i = 8 To lstr1
+        ws1.Range("S" & i).Value = "=CONCATENATE(D" & i & ",H" & i & ",J" & i & ")"
+        Next i
+ws1.Range("A7:T7").AutoFilter field:=9, Criteria1:="<>ECS"
+ws1.Range("A7:T7").AutoFilter field:=11, Criteria1:=Array("GL CR", "Bank DR"), Operator:=xlFilterValues
+ws1.Range("S7:S" & lstr1).Copy ws7.Range("A1")
+ws1.Range("J7:J" & lstr1).Copy ws7.Range("B1")
+ws1.Range("K7:K" & lstr1).Copy ws7.Range("C1")
+wb4.Sheets.Add after:=wb4.Sheets("Sheet1")
+Set ws8 = wb4.Sheets("Sheet2")
+lstr7 = ws7.Cells(Rows.Count, 2).End(xlUp).Row
+Set pTbl = wb4.PivotCaches.Create(SourceType:=xlDatabase, _
+SourceData:=ws7.Range("A1:C" & lstr7)).CreatePivotTable(TableDestination:=ws8.Range("A1"), _
+TableName:="GL CR and Bank DR PivotTable")
+
+    With ws8.PivotTables("GL CR and Bank DR PivotTable").PivotFields("Concant Value")
+        .Orientation = xlRowField
+        .Position = 1
+    End With
+    With ws8.PivotTables("GL CR and Bank DR PivotTable").PivotFields("DR / CR")
+        .Orientation = xlColumnField
+        .Position = 1
+    End With
+    With ws8.PivotTables("GL CR and Bank DR PivotTable").PivotFields("AMOUNT")
+        .Orientation = xlDataField
+        .Position = 1
+        .Function = xlSum
+        .NumberFormat = "General"
+        .Value = .Value
+    End With
+wb4.Sheets.Add after:=wb4.Sheets("Sheet2")
+Set ws9 = wb4.Sheets("Sheet3")
+lstr8 = ws8.Cells(Rows.Count, 1).End(xlUp).Row
+ws8.Range("A2:D" & lstr8 - 1).Copy ws9.Range("A1")
+lstr9 = ws9.Cells(Rows.Count, 1).End(xlUp).Row
+ws9.Cells(1, 5).Value = "Difference"
+    For i = 2 To lstr9
+        ws9.Cells(i, 5).Value = ws9.Cells(i, 2).Value - ws9.Cells(i, 3).Value
+    Next i
+    
+ws9.Range("A1:E1").AutoFilter field:=5, Criteria1:="<>0"
+ws9.Range("A2:E" & lstr9).SpecialCells(xlCellTypeVisible).EntireRow.Delete
+ws9.AutoFilterMode = False
+    
+k = 8
+ws1.AutoFilterMode = False
+ws1.Range("T" & k - 1).Value = "VLOOKUP Values"
+lstr = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+
+ws1.AutoFilterMode = False
+lstr9 = ws9.Cells(Rows.Count, 1).End(xlUp).Row
+ws1.Range("T" & k & ":T" & lstr).Value = Application.VLookup _
+(ws1.Range("S" & k & ":S" & lstr).Value, ws9.Range("A2:A" & lstr9), 1, False)
+ws1.Range("A7:T7").AutoFilter field:=9, Criteria1:="<>ECS"
+ws1.Range("A7:T7").AutoFilter field:=11, Criteria1:=Array("GL CR", "Bank DR"), Operator:=xlFilterValues
+ws1.Range("A7:T7").AutoFilter field:=20, Criteria1:="<>#N/A"
+
+lstr10 = ws10.Cells(Rows.Count, 2).End(xlUp).Row
+ws1.Range("A8:T" & lstr).Copy ws10.Range("A" & lstr10 + 1)
+ws1.Range("A8:T" & lstr).SpecialCells(xlCellTypeVisible).EntireRow.Delete
+ws1.AutoFilterMode = False
+ws1.Range("T" & k & ":T" & lstr1).EntireColumn.Delete
+wb4.Close False
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'C2 - Bank DR & GL CR Exclude Loan Amount
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Set wb4 = Workbooks.Add
+Set ws7 = wb4.Sheets("Sheet1")
+lstr1 = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+ws1.Cells(7, 19).Value = "Concant Value"
+    For i = 8 To lstr1
+        ws1.Range("S" & i).Value = "=CONCATENATE(H" & i & ",J" & i & ")"
+        Next i
+ws1.Range("A7:T7").AutoFilter field:=9, Criteria1:="<>ECS"
+ws1.Range("A7:T7").AutoFilter field:=11, Criteria1:=Array("GL CR", "Bank DR"), Operator:=xlFilterValues
+ws1.Range("S7:S" & lstr1).Copy ws7.Range("A1")
+ws1.Range("J7:J" & lstr1).Copy ws7.Range("B1")
+ws1.Range("K7:K" & lstr1).Copy ws7.Range("C1")
+wb4.Sheets.Add after:=wb4.Sheets("Sheet1")
+Set ws8 = wb4.Sheets("Sheet2")
+lstr7 = ws7.Cells(Rows.Count, 2).End(xlUp).Row
+Set pTbl = wb4.PivotCaches.Create(SourceType:=xlDatabase, SourceData:=ws7.Range("A1:C" & lstr7)). _
+CreatePivotTable(TableDestination:=ws8.Range("A1"), TableName:="GL CR and Bank DR PivotTable")
+
+    With ws8.PivotTables("GL CR and Bank DR PivotTable").PivotFields("Concant Value")
+        .Orientation = xlRowField
+        .Position = 1
+    End With
+    With ws8.PivotTables("GL CR and Bank DR PivotTable").PivotFields("DR / CR")
+        .Orientation = xlColumnField
+        .Position = 1
+    End With
+    With ws8.PivotTables("GL CR and Bank DR PivotTable").PivotFields("AMOUNT")
+        .Orientation = xlDataField
+        .Position = 1
+        .Function = xlSum
+        .NumberFormat = "General"
+        .Value = .Value
+    End With
+wb4.Sheets.Add after:=wb4.Sheets("Sheet2")
+Set ws9 = wb4.Sheets("Sheet3")
+lstr8 = ws8.Cells(Rows.Count, 1).End(xlUp).Row
+ws8.Range("A2:D" & lstr8 - 1).Copy ws9.Range("A1")
+lstr9 = ws9.Cells(Rows.Count, 1).End(xlUp).Row
+ws9.Cells(1, 5).Value = "Difference"
+    For i = 2 To lstr9
+        ws9.Cells(i, 5).Value = ws9.Cells(i, 2).Value - ws9.Cells(i, 3).Value
+    Next i
+    
+ws9.Range("A1:E1").AutoFilter field:=5, Criteria1:="<>0"
+ws9.Range("A2:E" & lstr9).SpecialCells(xlCellTypeVisible).EntireRow.Delete
+ws9.AutoFilterMode = False
+    
+k = 8
+ws1.Range("T" & k - 1).Value = "VLOOKUP Values"
+lstr = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+'lstr9 = ws9.Cells(Rows.Count, 1).End(xlUp).Row
+ws1.AutoFilterMode = False
+ws1.Range("T" & k & ":T" & lstr).Value = Application.VLookup _
+(ws1.Range("S" & k & ":S" & lstr).Value, ws9.Range("A2:A" & lstr9), 1, False)
+ws1.Range("A7:T7").AutoFilter field:=9, Criteria1:="<>ECS"
+ws1.Range("A7:T7").AutoFilter field:=11, Criteria1:=Array("GL CR", "Bank DR"), Operator:=xlFilterValues
+ws1.Range("A7:T7").AutoFilter field:=20, Criteria1:="<>#N/A"
+lstr10 = ws10.Cells(Rows.Count, 2).End(xlUp).Row
+ws1.Range("A8:T" & lstr).Copy ws10.Range("A" & lstr10 + 1)
+ws1.Range("A8:T" & lstr).SpecialCells(xlCellTypeVisible).EntireRow.Delete
+ws1.AutoFilterMode = False
+ws1.Range("T" & k & ":T" & lstr).EntireColumn.Delete
+wb4.Close False
+
+Application.ScreenUpdating = True
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'D1 - Bank CR & GL DR
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Set wb4 = Workbooks.Add
+Set ws7 = wb4.Sheets("Sheet1")
+lstr1 = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+ws1.Cells(7, 19).Value = "Concant Value"
+    For i = 8 To lstr1
+        ws1.Range("S" & i).Value = "=CONCATENATE(D" & i & ",H" & i & ",J" & i & ")"
+        Next i
+ws1.Range("A7:T7").AutoFilter field:=9, Criteria1:="<>ECS"
+ws1.Range("A7:T7").AutoFilter field:=11, Criteria1:=Array("GL DR", "Bank CR"), Operator:=xlFilterValues
+ws1.Range("S7:S" & lstr1).Copy ws7.Range("A1")
+ws1.Range("J7:J" & lstr1).Copy ws7.Range("B1")
+ws1.Range("K7:K" & lstr1).Copy ws7.Range("C1")
+wb4.Sheets.Add after:=wb4.Sheets("Sheet1")
+Set ws8 = wb4.Sheets("Sheet2")
+lstr7 = ws7.Cells(Rows.Count, 2).End(xlUp).Row
+Set pTbl = wb4.PivotCaches.Create(SourceType:=xlDatabase, _
+SourceData:=ws7.Range("A1:C" & lstr7)).CreatePivotTable(TableDestination:=ws8.Range("A1"), _
+TableName:="GL DR and Bank CR PivotTable")
+
+    With ws8.PivotTables("GL DR and Bank CR PivotTable").PivotFields("Concant Value")
+        .Orientation = xlRowField
+        .Position = 1
+    End With
+    With ws8.PivotTables("GL DR and Bank CR PivotTable").PivotFields("DR / CR")
+        .Orientation = xlColumnField
+        .Position = 1
+    End With
+    With ws8.PivotTables("GL DR and Bank CR PivotTable").PivotFields("AMOUNT")
+        .Orientation = xlDataField
+        .Position = 1
+        .Function = xlSum
+        .NumberFormat = "General"
+        .Value = .Value
+    End With
+wb4.Sheets.Add after:=wb4.Sheets("Sheet2")
+Set ws9 = wb4.Sheets("Sheet3")
+lstr8 = ws8.Cells(Rows.Count, 1).End(xlUp).Row
+ws8.Range("A2:D" & lstr8 - 1).Copy ws9.Range("A1")
+lstr9 = ws9.Cells(Rows.Count, 1).End(xlUp).Row
+ws9.Cells(1, 5).Value = "Difference"
+    For i = 2 To lstr9
+        ws9.Cells(i, 5).Value = ws9.Cells(i, 2).Value - ws9.Cells(i, 3).Value
+    Next i
+    
+ws9.Range("A1:E1").AutoFilter field:=5, Criteria1:="<>0"
+ws9.Range("A2:E" & lstr9).SpecialCells(xlCellTypeVisible).EntireRow.Delete
+ws9.AutoFilterMode = False
+    
+k = 8
+ws1.AutoFilterMode = False
+ws1.Range("T" & k - 1).Value = "VLOOKUP Values"
+lstr = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+
+ws1.AutoFilterMode = False
+lstr9 = ws9.Cells(Rows.Count, 1).End(xlUp).Row
+ws1.Range("T" & k & ":T" & lstr).Value = Application.VLookup _
+(ws1.Range("S" & k & ":S" & lstr).Value, ws9.Range("A2:A" & lstr9), 1, False)
+ws1.Range("A7:T7").AutoFilter field:=9, Criteria1:="<>ECS"
+ws1.Range("A7:T7").AutoFilter field:=11, Criteria1:=Array("GL DR", "Bank CR"), Operator:=xlFilterValues
+ws1.Range("A7:T7").AutoFilter field:=20, Criteria1:="<>#N/A"
+
+lstr10 = ws10.Cells(Rows.Count, 2).End(xlUp).Row
+ws1.Range("A8:T" & lstr).Copy ws10.Range("A" & lstr10 + 1)
+ws1.Range("A8:T" & lstr).SpecialCells(xlCellTypeVisible).EntireRow.Delete
+ws1.AutoFilterMode = False
+ws1.Range("T" & k & ":T" & lstr1).EntireColumn.Delete
+wb4.Close False
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'D2 - Bank CR & GL DR Exclude Loan Amount
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Set wb4 = Workbooks.Add
+Set ws7 = wb4.Sheets("Sheet1")
+lstr1 = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+ws1.Cells(7, 19).Value = "Concant Value"
+    For i = 8 To lstr1
+        ws1.Range("S" & i).Value = "=CONCATENATE(H" & i & ",J" & i & ")"
+        Next i
+ws1.Range("A7:T7").AutoFilter field:=9, Criteria1:="<>ECS"
+ws1.Range("A7:T7").AutoFilter field:=11, Criteria1:=Array("GL DR", "Bank CR"), Operator:=xlFilterValues
+ws1.Range("S7:S" & lstr1).Copy ws7.Range("A1")
+ws1.Range("J7:J" & lstr1).Copy ws7.Range("B1")
+ws1.Range("K7:K" & lstr1).Copy ws7.Range("C1")
+wb4.Sheets.Add after:=wb4.Sheets("Sheet1")
+Set ws8 = wb4.Sheets("Sheet2")
+lstr7 = ws7.Cells(Rows.Count, 2).End(xlUp).Row
+Set pTbl = wb4.PivotCaches.Create(SourceType:=xlDatabase, SourceData:=ws7.Range("A1:C" & lstr7)). _
+CreatePivotTable(TableDestination:=ws8.Range("A1"), TableName:="GL DR and Bank CR PivotTable")
+
+    With ws8.PivotTables("GL DR and Bank CR PivotTable").PivotFields("Concant Value")
+        .Orientation = xlRowField
+        .Position = 1
+    End With
+    With ws8.PivotTables("GL DR and Bank CR PivotTable").PivotFields("DR / CR")
+        .Orientation = xlColumnField
+        .Position = 1
+    End With
+    With ws8.PivotTables("GL DR and Bank CR PivotTable").PivotFields("AMOUNT")
+        .Orientation = xlDataField
+        .Position = 1
+        .Function = xlSum
+        .NumberFormat = "General"
+        .Value = .Value
+    End With
+wb4.Sheets.Add after:=wb4.Sheets("Sheet2")
+Set ws9 = wb4.Sheets("Sheet3")
+lstr8 = ws8.Cells(Rows.Count, 1).End(xlUp).Row
+ws8.Range("A2:D" & lstr8 - 1).Copy ws9.Range("A1")
+lstr9 = ws9.Cells(Rows.Count, 1).End(xlUp).Row
+ws9.Cells(1, 5).Value = "Difference"
+    For i = 2 To lstr9
+        ws9.Cells(i, 5).Value = ws9.Cells(i, 2).Value - ws9.Cells(i, 3).Value
+    Next i
+    
+ws9.Range("A1:E1").AutoFilter field:=5, Criteria1:="<>0"
+ws9.Range("A2:E" & lstr9).SpecialCells(xlCellTypeVisible).EntireRow.Delete
+ws9.AutoFilterMode = False
+    
+k = 8
+ws1.Range("T" & k - 1).Value = "VLOOKUP Values"
+lstr = ws1.Cells(Rows.Count, 2).End(xlUp).Row
+'lstr9 = ws9.Cells(Rows.Count, 1).End(xlUp).Row
+ws1.AutoFilterMode = False
+ws1.Range("T" & k & ":T" & lstr).Value = Application.VLookup _
+(ws1.Range("S" & k & ":S" & lstr).Value, ws9.Range("A2:A" & lstr9), 1, False)
+ws1.Range("A7:T7").AutoFilter field:=9, Criteria1:="<>ECS"
+ws1.Range("A7:T7").AutoFilter field:=11, Criteria1:=Array("GL DR", "Bank CR"), Operator:=xlFilterValues
+ws1.Range("A7:T7").AutoFilter field:=20, Criteria1:="<>#N/A"
+lstr10 = ws10.Cells(Rows.Count, 2).End(xlUp).Row
+ws1.Range("A8:T" & lstr).Copy ws10.Range("A" & lstr10 + 1)
+ws1.Range("A8:T" & lstr).SpecialCells(xlCellTypeVisible).EntireRow.Delete    //*******************************important line ****************************//
+ws1.AutoFilterMode = False
+ws1.Range("T" & k & ":T" & lstr).EntireColumn.Delete
+wb4.Close False
+
+ws10.Range("S1").Value = "Concat Value"
+ws10.Range("T1").Value = "VLookup Values"
+lstr10 = ws10.Cells(Rows.Count, 2).End(xlUp).Row
+ws10.Range("A1:T" & lstr10).Columns.AutoFit
+ws10.Range("A1:T" & lstr10).Sort Key1:=ws10.Range("T1:T" & lstr10), Order1:=xlAscending, Header:=xlYes
+k = 1
+ws10.Range("U1").Value = "Unique No."
+    For i = 2 To lstr1 Step 2
+        ws10.Range("U" & i).Value = Year(Date) & Month(Date) & Day(Date) & Z
+        ws10.Range("U" & i + 1).Value = Year(Date) & Month(Date) & Day(Date) & Z
+        Z = Z + 1
+    Next i
+
+
+End Sub
+
+
+
+
+
+
+#######################################################################################################################################################
+
+how to save active worksheet 
+
+
+ActiveWorkbook.Save
+
+
+#######################################################################################################################################################
+
+
+
+
+EPC payroll
+
+######################################################################################################################################################
+
+
+
+
+
+
+Sub bank_reco()
+Dim at, ms, op, dm As Workbook
+Dim Payble_days, actual_besic, basic, base, total_dedition, Payble_days1, PT, Actual_HRA, HRA1, HRA, Gross, allowance1, allowance, allowance2, allowance3, months As Integer
+Dim ws1, ws2, ws3, ws4 As Worksheet
+Dim i As Integer
+
+Dim lstr1, lstr2, lstr3, lstr4, feb, M, other, lstr5, r As Integer
+Dim current_months As Date
+
+Dim DataRange As Range
+
+'MsgBox month(Date)
+
+'opening workbook
+
+Set at = Workbooks.Open("D:\onedrive\omfys01\OneDrive - Bajaj Electricals Limited\Desktop\Payroll_POC\Attendance.xlsx")
+Set ms = Workbooks.Open("D:\onedrive\omfys01\OneDrive - Bajaj Electricals Limited\Desktop\Payroll_POC\Master_file.xlsx")
+Set op = Workbooks.Open("D:\onedrive\omfys01\OneDrive - Bajaj Electricals Limited\Desktop\Payroll_POC\output\output.xlsx")
+Set dm = Workbooks.Open("D:\onedrive\omfys01\OneDrive - Bajaj Electricals Limited\Desktop\Payroll_POC\Dummy.xlsx")
+
+
+
+'open sheets
+
+Set ws1 = at.Sheets("Sheet1")
+Set ws2 = ms.Sheets("Sheet1")
+Set ws3 = op.Sheets("Sheet1")
+Set ws4 = dm.Sheets("Sheet1")
+
+
+
+ws1.Range("AY4:AY31").Copy ws4.Range("P5")
+'copy data from attendance to dummy sheet
+lstr1 = ws1.Cells(Rows.Count, 1).End(xlUp).Row
+
+ws1.Range("B4:B" & lstr1).Copy ws4.Range("A5")
+'ws1.Range("AY4:AY" & lstr1).Copy ws4.Range("B2")
+
+'find last row of dummy sheet
+lstr3 = ws4.Cells(Rows.Count, 1).End(xlUp).Row
+lstr2 = ws2.Cells(Rows.Count, 1).End(xlUp).Row
+
+
+'applying vlookup on master sheet for referance Dummy sheet
+
+Set DataRange = ws2.Range("A4:N" & lstr2)
+
+For i = 5 To lstr3
+
+    ws4.Range("B" & i).Value = Application.VLookup(ws4.Range("A" & i).Value, DataRange, 2, False)
+    ws4.Range("C" & i).Value = Application.VLookup(ws4.Range("A" & i).Value, DataRange, 3, False)
+    ws4.Range("D" & i).Value = Application.VLookup(ws4.Range("A" & i).Value, DataRange, 4, False)
+    ws4.Range("E" & i).Value = Application.VLookup(ws4.Range("A" & i).Value, DataRange, 5, False)
+    ws4.Range("F" & i).Value = Application.VLookup(ws4.Range("A" & i).Value, DataRange, 6, False)
+    
+Next i
+
+
+
+
+
+Payble_days = ws1.Range("C1").Value
+
+'MsgBox Payble_days
+'get actual basic from master sheet
+lstr2 = ws2.Cells(Rows.Count, 1).End(xlUp).Row - 1
+
+For i = 5 To lstr2
+  Payble_days1 = ws1.Range("BZ" & i - 1).End(xlToLeft).Value
+
+  actual_besic = ws2.Range("B" & i)
+  
+  
+  'MsgBox actual_besic
+
+  'use besic fdarmula
+
+  base = actual_besic / Payble_days
+
+ 'need employee present days*******
+
+  basic = base * Payble_days1
+
+  ws3.Range("B" & i).Value = basic
+  
+  
+
+Next i
+
+'using dummy sheet value for  calculation
+lstr4 = ws2.Cells(Rows.Count, 1).End(xlUp).Row
+
+For i = 5 To lstr4
+  
+  Actual_HRA = ws4.Range("C" & i)
+  HRA1 = Actual_HRA / Payble_days
+  HRA = HRA1 * ws4.Range("P" & i)
+
+  
+  ws3.Range("C" & i).Value = HRA
+  'MsgBox HRA
+Next i
+
+
+
+'To find Gross
+For i = 5 To lstr4
+ basic = ws4.Range("B" & i)
+ HRA = ws4.Range("c" & i)
+ allowance1 = ws4.Range("D" & i)
+ allowance2 = ws4.Range("E" & i)
+ allowance3 = ws4.Range("F" & i)
+ 
+ allowance = basic + HRA + allowance1 + allowance2 + allowance3
+ 
+ ws3.Range("D" & i).Value = allowance
+ 
+Next i
+
+
+
+
+
+
+
+current_months = ws1.Range("B1").Value
+'PT
+M = month(current_months)
+
+feb = 300
+other = 200
+For i = 5 To lstr3
+  If M = 2 Then
+  ws3.Range("H" & i).Value = feb
+  Else
+  ws3.Range("H" & i).Value = other
+  
+
+End If
+Next i
+  
+
+
+
+
+'calculation for Pf
+
+
+For i = 5 To lstr4
+ basic = ws4.Range("B" & i)
+ PT = (basic * 12) / 100
+ ws3.Range("I" & i).Value = PT
+ 
+ 
+Next i
+
+
+
+
+'calucaltion for Esic
+
+For i = 5 To lstr4
+ basic = ws4.Range("B" & i)
+ HRA = ws4.Range("c" & i)
+ allowance1 = ws4.Range("D" & i)
+ allowance2 = ws4.Range("E" & i)
+ allowance3 = ws4.Range("F" & i)
+ 
+ allowance = basic + HRA + allowance1 + allowance2 + allowance3
+ Esic = (allowance * 3.25) / 100
+ 
+ ws3.Range("J" & i).Value = allowance
+ 
+ Next i
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+For i = 5 To lstr4
+ basic = ws4.Range("B" & i)
+ PT = (basic * 12) / 100
+ 
+  basic = ws4.Range("B" & i)
+ HRA = ws4.Range("c" & i)
+ allowance1 = ws4.Range("D" & i)
+ allowance2 = ws4.Range("E" & i)
+ allowance3 = ws4.Range("F" & i)
+ 
+ allowance = basic + HRA + allowance1 + allowance2 + allowance3
+ Esic = (allowance * 3.25) / 100
+ 
+  
+ 
+ total_dedition = allowance + Esic
+ 
+ ws3.Range("M" & i).Value = total_dedition
+ 
+Next i
+
+
+
+'for total all column
+
+lstr5 = ws3.Cells(Rows.Count, 1).End(xlUp).Row
+
+ws3.Range("B" & lstr5).Value = Application.Sum(ws3.Range("B5:B" & lstr5))
+ws3.Range("C" & lstr5).Value = Application.Sum(ws3.Range("C5:C" & lstr5))
+ws3.Range("D" & lstr5).Value = Application.Sum(ws3.Range("D5:D" & lstr5))
+
+ws3.Range("H" & lstr5).Value = Application.Sum(ws3.Range("H5:H" & lstr5))
+ws3.Range("I" & lstr5).Value = Application.Sum(ws3.Range("I5:I" & lstr5))
+ws3.Range("J" & lstr5).Value = Application.Sum(ws3.Range("J5:J" & lstr5))
+ws3.Range("M" & lstr5).Value = Application.Sum(ws3.Range("M5:M" & lstr5))
+
+
+
+
+
+
+
+
+End Sub
+
+####################################################################################To add sheets in workbook###########################################
+
+Sheets.Add.Name = "NewSheet"
+
+*******************************************************************************server code ***************************************************************
+Function Axis_Bank(ByVal vInputFolder As String)
+
+Application.DisplayAlerts = False
+
+Dim wb1 As Workbook
+Dim ws1 As Worksheet
+Dim InputFolderPath As String
+
+InputFolderPath = vInputFolder
+
+MsgBox 10 + "abc"
+FileName = Dir(InputFolderPath & "\*.xls")
+Set wb1 = Workbooks.Open(InputFolderPath & "\" & FileName)
+
+Set ws1 = wb1.Worksheets("Maturity Report")
+
+ws1.Rows(8).EntireRow.Delete
+wb1.Save
+wb1.Close
+
+
+End Function
+
+
+###################################################################################################################################################################
+
+To find dublicate value in excel sheet
+
+Sub sbFindDuplicatesInColumn()
+    Dim lastRow As Long
+    Dim matchFoundIndex As Long
+    Dim iCntr As Long
+    lastRow = Range("A65000").End(xlUp).Row
+
+    For iCntr = 1 To lastRow
+    If Cells(iCntr, 1) <> "" Then
+        matchFoundIndex = WorksheetFunction.Match(Cells(iCntr, 1), Range("A1:A" & lastRow), 0)
+        If iCntr <> matchFoundIndex Then
+            Cells(iCntr, 2) = "Duplicate" 
+       End If
+    End If
+    Next
+End Sub 
+
+###############################################################################################################################################################
+
+#it use to delete all visible value after filtering data
+
+ws9.Range("A2:E" & lstr9).SpecialCells(xlCellTypeVisible).EntireRow.Delete
+#########################################################################################################################################
+folder script vba script
+
+
+
+
+
+Sub Reports()
+
+Dim oFSO As Object
+Dim oFolder As Object
+Dim oFile As Object
+Dim i As Integer
+Dim LR, LR1, LR3 As Long
+Dim iRange As Range
+Dim iCells As Range
+Dim wb1, Wb2, wb3 As Workbook
+Dim ws1, ws2, ws3 As Worksheet
+
+
+Set wb1 = Workbooks.Open(ThisWorkbook.Sheets("Sheet1").Range("B1").Value, UpdateLinks:=False)
+Set ws1 = wb1.Sheets("Sheet1")
+
+Set wb3 = Workbooks.Open(ThisWorkbook.Sheets("Sheet1").Range("B2").Value, UpdateLinks:=False)
+Set ws3 = wb3.Sheets("Sheet1")
+
+Set oFSO = CreateObject("Scripting.FileSystemObject")
+Set oFolder = oFSO.GetFolder("E:\Rahul_TagUI\Daily Task Report\Input Report Sheets")
+
+Todays_Date = Format(Date, "mm-dd-yyyy")
+Todays_Date1 = Split(Todays_Date, "-")
+'MsgBox Todays_Date1(0)
+Todays_Date2 = Todays_Date1(1) & "" & Todays_Date1(0) & "" & Todays_Date1(2)
+'MsgBox Todays_Date2
+
+Current_Time = Time
+'MsgBox Current_Time
+Current_Time1 = Split(Current_Time, ":")
+Current_Time2 = Current_Time1(0) & "" & Current_Time1(1) & "" & Current_Time1(2)
+Current_Time3 = Split(Current_Time2, " ")
+'MsgBox Current_Time3(0)
+
+Current_Date_Time = Todays_Date2 & " " & Current_Time2
+'MsgBox Current_Date_Time
+
+ws3.Range("A1").Value = Todays_Date
+ws3.Range("A1").NumberFormat = "dd-mm-yyy"
+ws3.Range("B1").Value = "Daily Task Reports"
+ws3.Range("A1").Font.Bold = True
+ws3.Range("B1").Font.Bold = True
+ws3.Range("B1").Font.Size = 12
+ws3.Range("A1").HorizontalAlignment = xlCenter
+'ws3.Range("B1").HorizontalAlignment = xlCenter
+
+'ws3.Range("A1").BorderAround LineStyle:=xlContinuous, Weight:=xlThin
+'ws3.Range("B1").BorderAround LineStyle:=xlContinuous, Weight:=xlThin
+
+For Each oFile In oFolder.Files
+    LR1 = ws3.Cells(Rows.Count, 1).End(xlUp).Row
+    ws1.Cells(i + 1, 1) = oFile.Name
+    'MsgBox oFile.Name
+    
+    Result = Split(oFile.Name, ".")
+    'MsgBox Result
+    Result1 = Result(0)
+    
+    Set Wb2 = Workbooks.Open("E:\Rahul_TagUI\Daily Task Report\Input Report Sheets\" & oFile.Name & "", , True)
+    Set ws2 = Wb2.Sheets("Sheet1")
+    
+    
+    ws2.Rows(1).Insert shift:=xlShiftDown
+    LR = ws2.Cells(Rows.Count, 1).End(xlUp).Row
+    ws2.Range("A1").Value = "Project Name :-"
+    ws2.Range("B1").Value = Result1
+    
+    ws2.Range("G1:G" & LR).Select
+    ws2.Range("A1").Font.Bold = True
+    ws2.Range("B1").Font.Bold = True
+
+    Selection.SpecialCells(xlCellTypeBlanks).Select
+
+    Selection.EntireColumn.Delete
+    ws2.Range("G2").Value = "Delay Status"
+    ws2.Range("G2").Font.Bold = True
+    
+    Current_Date = Format(Date, "dd-mmm-yyyy")
+    'MsgBox Current_Date
+    
+    
+    
+    For k = 3 To LR:
+        
+        If ws2.Range("F" & k).Value = "Open" Then
+            
+            ws2.Range("G" & k).Value = "Open"
+            
+        ElseIf ws2.Range("F" & k).Value = "Completed" Then
+            
+            ws2.Range("G" & k).Value = "Completed"
+            
+        ElseIf ws2.Range("F" & k).Value = "Hold" Then
+            
+            ws2.Range("G" & k).Value = "Hold"
+            
+        ElseIf ws2.Range("F" & k).Value = "In Progress" Then
+        
+            End_Date1 = ws2.Range("E" & k).Value
+            Out_Date = Split(End_Date1, "-")
+            End_Date2 = Out_Date(1) & "-" & Out_Date(0) & "-" & Out_Date(2)
+            End_Date = Format(End_Date2, "dd-mmm-yyyy")
+            'MsgBox End_Date
+            Output_Days = DateDiff("D", End_Date, Current_Date)
+            If Output_Days > 0 Then
+            
+                Output_Days = DateDiff("D", End_Date, Current_Date)
+                ws2.Range("G" & k).Value = Output_Days & " Days"
+                
+            Else
+                ws2.Range("G" & k).Value = "In Progress"
+                
+            End If
+        
+        End If
+        
+    Next k
+    
+    'Autofit
+    ws2.Range("A1:G" & LR).EntireColumn.AutoFit
+    
+    'Border
+    'ws2.Range("A1").BorderAround LineStyle:=xlContinuous, Weight:=xlThin
+    'ws2.Range("B1").BorderAround LineStyle:=xlContinuous, Weight:=xlThin
+    Set iRange = Range("A2:G" & LR)
+
+    For Each iCells In iRange
+        iCells.BorderAround _
+            LineStyle:=xlContinuous, _
+            Weight:=xlThin
+    Next iCells
+    
+    ws2.Range("A2:A" & LR).HorizontalAlignment = xlCenter
+    
+    'Close oFile.Name
+    'Wb2.SaveAs "E:\Rahul_TagUI\Daily Task Report\Input Report Sheets\" & i & oFile.Name & "", FileFormat:=xlOpenXMLWorkbook
+    ws2.Range("A1:G" & LR).Copy ws3.Range("A" & LR1 + 2)
+    Wb2.Close False
+    'Wb3.Close False
+    
+    i = i + 1
+    
+    'MsgBox oFile.Name
+
+Next oFile
+LR3 = ws3.Cells(Rows.Count, 1).End(xlUp).Row
+ws3.Range("A1:G" & LR3).EntireColumn.AutoFit
+wb3.SaveAs "E:\Rahul_TagUI\Daily Task Report\Output Report Sheet\Output(" & Current_Date_Time & ").xlsx", FileFormat:=xlOpenXMLWorkbook
+wb3.Close False
+wb1.Close False
+End Sub
+
+#########################################################################################################################################
+
+
+
+
